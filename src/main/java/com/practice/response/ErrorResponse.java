@@ -1,0 +1,126 @@
+package com.practice.response;
+import com.practice.exception.ExceptionCode;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+
+import javax.validation.ConstraintViolation;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+
+/*
+@Getter
+@AllArgsConstructor
+public class ErrorResponse {
+    private List<FieldError> fieldErrors;
+
+    @Getter
+    @AllArgsConstructor
+    public static class FieldError {
+        private String field;
+        private Object rejecedValud;
+        private String reason;
+    }
+}*/
+@Getter
+public class ErrorResponse {
+    /**
+     * Http Status
+     */
+    private Integer status;
+    /**
+     * 에러 메시지
+     */
+    private String message;
+    private List<FieldError> fieldErrors;
+    private List<ConstraintViolationError> violationErrors;
+
+    /**
+     * Http Status와 에러 메시지를 생성자 파라미터로 전달 받아 ErrorResponse의 status와 message 필드를 초기화 해줍니다.
+     *
+     * @param status    Http Status
+     * @param message   에러 메시지
+     */
+    private ErrorResponse(int status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
+    private ErrorResponse(List<FieldError> fieldErrors,
+                            List<ConstraintViolationError> violationErrors) {
+        this.fieldErrors = fieldErrors;
+        this.violationErrors = violationErrors;
+    }
+
+    public static ErrorResponse of(BindingResult bindingResult) {
+        return new ErrorResponse(FieldError.of(bindingResult), null);
+    }
+
+    public static ErrorResponse of(Set<ConstraintViolation<?>> violations) {
+        return new ErrorResponse(null, ConstraintViolationError.of(violations));
+    }
+
+    public static ErrorResponse of(ExceptionCode exceptionCode) {
+        return new ErrorResponse(exceptionCode.getStatus(), exceptionCode.getMessage());
+    }
+
+    public static ErrorResponse of(HttpStatus httpStatus) {
+        return new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase());
+    }
+
+    public static ErrorResponse of(int status, String message) {
+        return new ErrorResponse(status, message);
+    }
+
+    @Getter
+    public static class FieldError {
+        private String field;
+        private Object rejectedValue;
+        private String reason;
+
+        private FieldError(String field, Object rejectedValue, String reason) {
+            this.field = field;
+            this.rejectedValue = rejectedValue;
+            this.reason = reason;
+        }
+
+        private static List<FieldError> of(BindingResult bindingResult) {
+            final List<org.springframework.validation.FieldError> fieldErrors =
+                    bindingResult.getFieldErrors();
+            return fieldErrors.stream()
+                    .map(error -> new FieldError(
+                            error.getField(),
+                            error.getRejectedValue() == null ?
+                                    "" : error.getRejectedValue().toString(),
+                            error.getDefaultMessage()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Getter
+    public static class ConstraintViolationError {
+        private String propertyPath;
+        private Object rejectedValue;
+        private String reason;
+
+        private ConstraintViolationError(String propertyPath, Object rejectedValue,
+                                         String reason) {
+            this.propertyPath = propertyPath;
+            this.rejectedValue = rejectedValue;
+            this.reason = reason;
+        }
+
+        private static List<ConstraintViolationError> of(
+                Set<ConstraintViolation<?>> constraintViolations) {
+            return constraintViolations.stream()
+                    .map(constraintViolation -> new ConstraintViolationError(
+                            constraintViolation.getPropertyPath().toString(),
+                            constraintViolation.getInvalidValue().toString(),
+                            constraintViolation.getMessage()
+                    )).collect(Collectors.toList());
+        }
+    }
+}

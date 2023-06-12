@@ -9,9 +9,9 @@ Todo 관리를 위한 웹 애플리케이션입니다.
 - BE: 백도담
 
 ## 기술 스텍
-- git
-- github
-- spring
-- springBoot
+- Git
+- Github
+- Spring
+- SpringBoot
 - Java
 - SpringJpa

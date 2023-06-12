@@ -5,10 +5,12 @@ import com.practice.exception.ExceptionCode;
 import com.practice.todo.entity.Todo;
 import com.practice.todo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class TodoService {
 
@@ -24,7 +26,7 @@ public class TodoService {
     }
     public Todo updateTodo(Todo todo) {
         // 존재하는 todo인지 검증
-        Todo findTodo = findVerifiedTodo(todo.getId());
+        Todo findTodo = findVerifiedTodo(todo.getTodoId());
 
 
         // title 정보와 completed 정보 업데이트
@@ -37,8 +39,9 @@ public class TodoService {
         return todoRepository.save(findTodo);
     }
 
-    public Todo findTodo(long id) {
-        return findVerifiedTodo(id);
+    @Transactional(readOnly = true)
+    public Todo findTodo(long todoId) {
+        return findVerifiedTodo(todoId);
     }
 
     public List<Todo> findTodos() {
@@ -46,14 +49,18 @@ public class TodoService {
 
     }
 
-    public void deleteTodo(long id) {
-        Todo findTodo = findVerifiedTodo(id);
+    public void deleteTodo(long todoId) {
+        Todo findTodo = findVerifiedTodo(todoId);
         todoRepository.delete(findTodo);
     }
 
+    public void deleteAll() {
+        todoRepository.deleteAll();
+    }
+
     // 존재하는 todo 목록인지 검증
-    public Todo findVerifiedTodo(long id){
-        Optional<Todo> optionalTodo = todoRepository.findById(id);
+    public Todo findVerifiedTodo(long todoId){
+        Optional<Todo> optionalTodo = todoRepository.findById(todoId);
         Todo findTodo = optionalTodo.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.TODO_NOT_FOUND));
         return findTodo;

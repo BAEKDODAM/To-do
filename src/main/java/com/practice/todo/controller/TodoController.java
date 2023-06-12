@@ -6,7 +6,6 @@ import com.practice.todo.dto.TodoResponseDto;
 import com.practice.todo.entity.Todo;
 import com.practice.todo.mapper.TodoMapper;
 import com.practice.todo.service.TodoService;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -39,10 +38,10 @@ public class TodoController {
                 HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity patchTodo(@PathVariable("id") @Positive long id,
+    @PatchMapping("/{todo-id}")
+    public ResponseEntity patchTodo(@PathVariable("todo-id") @Positive long todoId,
                                       @Valid @RequestBody TodoPatchDto todoPatchDto) {
-        todoPatchDto.setId(id);
+        todoPatchDto.setTodoId(todoId);
         Todo todo = mapper.todoPatchDtoToTodo(todoPatchDto);
         Todo response = todoService.updateTodo(todo);
 

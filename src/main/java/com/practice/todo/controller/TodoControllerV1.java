@@ -1,4 +1,4 @@
-package com.practice.todo.controller.v2;
+package com.practice.todo.controller;
 
 import com.practice.todo.dto.TodoPatchDto;
 import com.practice.todo.dto.TodoPostDto;
@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/v2/todos")
+@RequestMapping("/v1/todos")
 @Validated
-public class TodoControllerV2 {
+public class TodoControllerV1 {
     private final TodoService  todoService;
     private final TodoMapper mapper;
 
-    public TodoControllerV2(TodoService todoService, TodoMapper mapper) {
+    public TodoControllerV1(TodoService todoService, TodoMapper mapper) {
         this.todoService = todoService;
         this.mapper = mapper;
     }
@@ -40,7 +40,7 @@ public class TodoControllerV2 {
 
     @PatchMapping("/{todo-id}")
     public ResponseEntity patchTodo(@PathVariable("todo-id") @Positive long todoId,
-                                    @Valid @RequestBody TodoPatchDto todoPatchDto) {
+                                      @Valid @RequestBody TodoPatchDto todoPatchDto) {
         //todoPatchDto.setTodoId(todoId);
         Todo todo = mapper.todoPatchDtoToTodo(todoPatchDto);
         Todo response = todoService.updateTodo(todo);
@@ -49,9 +49,9 @@ public class TodoControllerV2 {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/{todo-id}")
-    public ResponseEntity getTodo(@PathVariable("todo-id") @Positive long todoId) {
-        Todo response = todoService.findTodo(todoId);
+    @GetMapping("/{id}")
+    public ResponseEntity getTodo(@PathVariable("id") @Positive long id) {
+        Todo response = todoService.findTodo(id);
         return new ResponseEntity<>(mapper.todoToTodoResponseDto(response),
                 HttpStatus.OK);
     }
@@ -66,16 +66,10 @@ public class TodoControllerV2 {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{todo-id}")
-    public ResponseEntity deleteTodo(@PathVariable("todo-id") @Positive long todoId)  {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteTodo(@PathVariable("id") @Positive long id)  {
         System.out.println("# delete");
-        todoService.deleteTodo(todoId);
+        todoService.deleteTodo(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    @DeleteMapping
-    public ResponseEntity deleteAllTodos() {
-        todoService.deleteAll();
-        return ResponseEntity.noContent().build();
     }
 }

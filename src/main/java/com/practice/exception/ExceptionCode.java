@@ -3,7 +3,10 @@ package com.practice.exception;
 import lombok.Getter;
 
 public enum ExceptionCode {
-    TODO_NOT_FOUND(404, "Todo not found");
+    TODO_NOT_FOUND(404, "Todo not found"),
+    MEMBER_NOT_FOUND(404, "Member not found"),
+    MEMBER_EXISTS(409, "Member exists"),
+    INVALID_MEMBER_STATUS(400, "Invalid Member status"),;
 
     @Getter
     private int status;

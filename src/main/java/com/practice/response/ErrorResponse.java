@@ -27,23 +27,11 @@ public class ErrorResponse {
 }*/
 @Getter
 public class ErrorResponse {
-    /**
-     * Http Status
-     */
     private Integer status;
-    /**
-     * 에러 메시지
-     */
     private String message;
     private List<FieldError> fieldErrors;
     private List<ConstraintViolationError> violationErrors;
 
-    /**
-     * Http Status와 에러 메시지를 생성자 파라미터로 전달 받아 ErrorResponse의 status와 message 필드를 초기화 해줍니다.
-     *
-     * @param status    Http Status
-     * @param message   에러 메시지
-     */
     private ErrorResponse(int status, String message) {
         this.status = status;
         this.message = message;

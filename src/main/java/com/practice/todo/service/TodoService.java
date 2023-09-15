@@ -4,6 +4,9 @@ import com.practice.exception.BusinessLogicException;
 import com.practice.exception.ExceptionCode;
 import com.practice.todo.entity.Todo;
 import com.practice.todo.repository.TodoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +31,13 @@ public class TodoService {
         // 존재하는 todo인지 검증
         Todo findTodo = findVerifiedTodo(todo.getTodoId());
 
-
         // title 정보와 completed 정보 업데이트
         Optional.ofNullable(todo.getTitle())
                 .ifPresent(title -> findTodo.setTitle(title));
         Optional.ofNullable(todo.isCompleted())
                 .ifPresent(completed -> findTodo.setCompleted(completed));
-
+        Optional.ofNullable(todo.getTodoPriority())
+                .ifPresent(todoPriority -> findTodo.setTodoPriority(todoPriority));
         // todo 정보 업데이트
         return todoRepository.save(findTodo);
     }
@@ -46,7 +49,9 @@ public class TodoService {
 
     public List<Todo> findTodos() {
         return (List<Todo>) todoRepository.findAll();
-
+    }
+    public Page<Todo> findAll(int page, int size){
+        return todoRepository.findAll(PageRequest.of(page - 1, size, Sort.by("todoPriority").descending()));
     }
 
     public void deleteTodo(long todoId) {
@@ -59,10 +64,10 @@ public class TodoService {
     }
 
     // 존재하는 todo 목록인지 검증
-    public Todo findVerifiedTodo(long todoId){
-        Optional<Todo> optionalTodo = todoRepository.findById(todoId);
-        Todo findTodo = optionalTodo.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.TODO_NOT_FOUND));
-        return findTodo;
+    @Transactional(readOnly = true)
+    public Todo findVerifiedTodo(long todoId) {
+        return todoRepository
+                .findById(todoId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TODO_NOT_FOUND));
     }
 }

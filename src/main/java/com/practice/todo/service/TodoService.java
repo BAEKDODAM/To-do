@@ -1,5 +1,7 @@
 package com.practice.todo.service;
 
+import com.practice.card.entity.Card;
+import com.practice.card.service.CardService;
 import com.practice.exception.BusinessLogicException;
 import com.practice.exception.ExceptionCode;
 import com.practice.todo.entity.Todo;
@@ -18,12 +20,16 @@ import java.util.Optional;
 public class TodoService {
 
     private final TodoRepository todoRepository;
+    private final CardService cardService;
 
-    public TodoService(TodoRepository todoRepository) {
+    public TodoService(TodoRepository todoRepository, CardService cardService) {
         this.todoRepository = todoRepository;
+        this.cardService = cardService;
     }
 
-    public Todo createTodo(Todo todo) {
+    public Todo createTodo(Todo todo, long cardId) {
+        Card card = cardService.findVerifiedCard(cardId);
+        todo.setCard(card);
         todo.setCompleted(false);
         return todoRepository.save(todo);
     }

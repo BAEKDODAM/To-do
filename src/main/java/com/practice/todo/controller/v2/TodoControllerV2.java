@@ -32,7 +32,7 @@ public class TodoControllerV2 {
     @PostMapping
     public ResponseEntity postTodo(@Valid @RequestBody TodoPostDto todoPostDto) {
         Todo todo = mapper.todoPostDtoToTodo(todoPostDto);
-        Todo response = todoService.createTodo(todo);
+        Todo response = todoService.createTodo(todo,1);
 
         return new ResponseEntity<>(mapper.todoToTodoResponseDto(response),
                 HttpStatus.CREATED);

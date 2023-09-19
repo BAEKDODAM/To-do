@@ -10,7 +10,6 @@ import lombok.Getter;
 public class TodoResponseDto {
     private long todoId;
     private String title;
-    //private int todoOrder;
     private Todo.TodoPriority todoPriority;
     private boolean completed;
     private String createdAt;

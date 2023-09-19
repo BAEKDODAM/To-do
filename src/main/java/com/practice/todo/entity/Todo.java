@@ -1,13 +1,14 @@
 package com.practice.todo.entity;
 
 import com.practice.audit.Auditable;
+import com.practice.card.entity.Card;
+import com.practice.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.lang.reflect.Member;
 
 @Getter
 @Setter
@@ -26,6 +27,10 @@ public class Todo extends Auditable {
 
     @Column(nullable = false)
     private boolean completed;
+
+    @ManyToOne
+    @JoinColumn(name = "cardId")
+    private Card card;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

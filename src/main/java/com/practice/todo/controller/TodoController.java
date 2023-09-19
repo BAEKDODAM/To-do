@@ -1,5 +1,6 @@
 package com.practice.todo.controller;
 
+import com.practice.auth.jwt.JwtTokenizer;
 import com.practice.response.MultiResponseDto;
 import com.practice.response.SingleResponseDto;
 import com.practice.todo.dto.TodoPatchDto;
@@ -23,33 +24,40 @@ import java.util.List;
 @RequestMapping("/todo")
 @Validated
 public class TodoController {
-    private final static String TODO_DEFAULT_URL = "/v1/todos";
+    private final static String TODO_DEFAULT_URL = "/todo";
     private final TodoService todoService;
     private final TodoMapper mapper;
+    private final JwtTokenizer jwtTokenizer;
 
-    public TodoController(TodoService todoService, TodoMapper mapper) {
+    public TodoController(TodoService todoService, TodoMapper mapper, JwtTokenizer jwtTokenizer) {
         this.todoService = todoService;
         this.mapper = mapper;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
-    // todo 생성, todo 수정(우선순위 수정, 완료 표시, 목록 중 하나 삭제), todo 전체 삭제
-    @PostMapping
-    public ResponseEntity postTodo(@Valid @RequestBody TodoPostDto requestBody) {
-        Todo createdTodo = todoService.createTodo(mapper.todoPostDtoToTodo(requestBody));
+    @PostMapping("/{cardId}")
+    public ResponseEntity postTodo(@RequestHeader("Authorization") String token,
+                                   @PathVariable("cardId") @Positive long cardId,
+                                   @Valid @RequestBody TodoPostDto requestBody) {
+        long memberId = jwtTokenizer.getMemberId(token);
+        Todo createdTodo = todoService.createTodo(mapper.todoPostDtoToTodo(requestBody), cardId);
         URI location = UriCreator.createUri(TODO_DEFAULT_URL, createdTodo.getTodoId());
         return ResponseEntity.created(location).build();
         //return ResponseEntity.created(new SingleResponseDto<>(response));
     }
 
     @PatchMapping("/{todo-id}")
-    public ResponseEntity patchTodo(@PathVariable("todo-id")  @Positive long todoId,
+    public ResponseEntity patchTodo(@RequestHeader("Authorization") String token,
+                                    @PathVariable("todo-id")  @Positive long todoId,
                                     @Valid @RequestBody TodoPatchDto requestBody) {
         requestBody.setTodoId(todoId);
         Todo updateTodo = todoService.updateTodo(mapper.todoPatchDtoToTodo(requestBody));
         return ResponseEntity.ok(mapper.todoToTodoResponseDto(updateTodo));
     }
+    /*
     @GetMapping("/{todo-id}")
-    public ResponseEntity getTodo(@PathVariable("todo-id") @Positive long todoId) {
+    public ResponseEntity getTodo(@RequestHeader("Authorization") String token,
+                                  @PathVariable("todo-id") @Positive long todoId) {
         Todo foundTodo = todoService.findTodo(todoId);
         TodoResponseDto response = mapper.todoToTodoResponseDto(foundTodo);
         return ResponseEntity.ok(new SingleResponseDto<>(response));
@@ -63,14 +71,20 @@ public class TodoController {
         return ResponseEntity.ok(new MultiResponseDto(mapper.todosToTodoResponseDtos(todos), pageTodo));
     }
 
+ */
+
     @DeleteMapping("/{todo-id}")
-    public ResponseEntity deleteTodo(@PathVariable("todo-id") long todoId) {
+    public ResponseEntity deleteTodo(@RequestHeader("Authorization") String token,
+                                     @PathVariable("todo-id") long todoId) {
         todoService.deleteTodo(todoId);
         return ResponseEntity.noContent().build();
     }
+    /*
     @DeleteMapping
-    public ResponseEntity deleteAllTodos() {
+    public ResponseEntity deleteAllTodos(@RequestHeader("Authorization") String token) {
         todoService.deleteAll();
         return ResponseEntity.noContent().build();
     }
+
+     */
 }

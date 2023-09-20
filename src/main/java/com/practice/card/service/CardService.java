@@ -28,7 +28,7 @@ public class CardService {
         return cardRepository.save(card);
     }
     public Card updateCard(Card card, long memberId, long cardId) {
-        Member member = memberService.findVerifiedMember(memberId);
+        memberService.findVerifiedMember(memberId);
         Card findCard = findVerifiedCard(cardId);
 
         findCard.setCardName(card.getCardName());

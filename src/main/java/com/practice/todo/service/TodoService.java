@@ -47,7 +47,7 @@ public class TodoService {
         // todo 정보 업데이트
         return todoRepository.save(findTodo);
     }
-
+/*
     @Transactional(readOnly = true)
     public Todo findTodo(long todoId) {
         return findVerifiedTodo(todoId);
@@ -59,14 +59,11 @@ public class TodoService {
     public Page<Todo> findAll(int page, int size){
         return todoRepository.findAll(PageRequest.of(page - 1, size, Sort.by("todoPriority").descending()));
     }
+ */
 
     public void deleteTodo(long todoId) {
         Todo findTodo = findVerifiedTodo(todoId);
         todoRepository.delete(findTodo);
-    }
-
-    public void deleteAll() {
-        todoRepository.deleteAll();
     }
 
     // 존재하는 todo 목록인지 검증

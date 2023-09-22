@@ -46,4 +46,32 @@ public class TodoServiceTest {
         assertEquals(result.getTodoId(), mockTodo.getTodoId());
         verify(todoRepository, times(1)).save(any(Todo.class));
     }
+
+    @Test
+    @DisplayName("updateTodo test")
+    public void updateTodoTest() {
+        Todo mockTodo = new Todo();
+        mockTodo.setTodoId(1L);
+        mockTodo.setTitle("todo");
+        when(todoRepository.findById(1L)).thenReturn(Optional.of(mockTodo));
+
+        Todo updateTodo = new Todo();
+        updateTodo.setTodoId(1L);
+        updateTodo.setTitle("update todo");
+        when(todoRepository.save(any(Todo.class))).thenReturn(updateTodo);
+
+        Todo result = todoService.updateTodo(mockTodo);
+        assertEquals(result.getTitle(), updateTodo.getTitle());
+    }
+
+    @Test
+    @DisplayName("deleteTodo test")
+    public void deleteTodo(){
+        Todo mockTodo = new Todo();
+        mockTodo.setTodoId(1L);
+        when(todoRepository.findById(1L)).thenReturn(Optional.of(mockTodo));
+        todoService.deleteTodo(mockTodo.getTodoId());
+
+        verify(todoRepository, times(1)).delete(mockTodo);
+    }
 }

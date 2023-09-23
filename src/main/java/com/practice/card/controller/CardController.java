@@ -59,6 +59,13 @@ public class CardController {
     public ResponseEntity getCards(@RequestHeader("Authorization") String token){
         long memberId = jwtTokenizer.getMemberId(token);
         List<Card> cards = cardService.findCardsByMemberId(memberId);
+        List<Card> cardsWithTodos = cards.stream()
+                .map(card -> {
+                    Card cardWithTodos = cardService.findCardWithTodos(card.getCardId());
+                    return cardWithTodos;
+                }).collect(Collectors.toList());
+        List<CardDto.Response> cardResponses = mapper.cardsToCardResponseDtos(cardsWithTodos);
+        /*
         List<CardDto.Response> cardResponses = cards.stream()
                 .map(card -> {
                     Card cardWithTodos = cardService.findCardWithTodos(card.getCardId());
@@ -66,6 +73,8 @@ public class CardController {
                     return response;
                 })
                 .collect(Collectors.toList());
+
+         */
         //return ResponseEntity.ok(cardResponses);
         return  new ResponseEntity<>(
                 new SingleResponseDto<>(cardResponses), HttpStatus.OK

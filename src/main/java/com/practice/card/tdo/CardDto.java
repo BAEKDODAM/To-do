@@ -29,5 +29,15 @@ public class CardDto {
         public List<TodoResponseDto> getTodos() {
             return todos;
         }
+
+        public Response(String cardName, long cardId, List<TodoResponseDto> todos) {
+            this.cardName = cardName;
+            this.cardId = cardId;
+            this.todos = todos;
+        }
+
+        public Response(long cardId) {
+            this.cardId = cardId;
+        }
     }
 }

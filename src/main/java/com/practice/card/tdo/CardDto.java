@@ -2,16 +2,15 @@ package com.practice.card.tdo;
 
 import com.practice.todo.dto.TodoResponseDto;
 import com.practice.todo.entity.Todo;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public class CardDto {
     @Getter
-    //@AllArgsConstructor
+    @Setter
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class Post {
         private String cardName;
@@ -21,6 +20,7 @@ public class CardDto {
 
     @Getter
     @Builder
+    //@NoArgsConstructor
     public static class Response{
         private String cardName;
         private long cardId;

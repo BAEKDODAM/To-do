@@ -1,6 +1,7 @@
 package com.practice.todo.controller;
 
 import com.practice.auth.jwt.JwtTokenizer;
+import com.practice.member.entity.Member;
 import com.practice.response.MultiResponseDto;
 import com.practice.response.SingleResponseDto;
 import com.practice.todo.dto.TodoPatchDto;
@@ -50,6 +51,7 @@ public class TodoController {
     public ResponseEntity patchTodo(@RequestHeader("Authorization") String token,
                                     @PathVariable("todo-id")  @Positive long todoId,
                                     @Valid @RequestBody TodoPatchDto requestBody) {
+        long memberId = jwtTokenizer.getMemberId(token);
         requestBody.setTodoId(todoId);
         Todo updateTodo = todoService.updateTodo(mapper.todoPatchDtoToTodo(requestBody));
         return ResponseEntity.ok(mapper.todoToTodoResponseDto(updateTodo));
@@ -76,7 +78,8 @@ public class TodoController {
     @DeleteMapping("/{todo-id}")
     public ResponseEntity deleteTodo(@RequestHeader("Authorization") String token,
                                      @PathVariable("todo-id") long todoId) {
-        todoService.deleteTodo(todoId);
+        long memberId = jwtTokenizer.getMemberId(token);
+        todoService.deleteTodo(todoId, memberId);
         return ResponseEntity.noContent().build();
     }
     /*

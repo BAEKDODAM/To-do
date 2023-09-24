@@ -61,9 +61,13 @@ public class TodoService {
     }
  */
 
-    public void deleteTodo(long todoId) {
+    public void deleteTodo(long todoId, long memberId) {
         Todo findTodo = findVerifiedTodo(todoId);
+        validateTodoOwnership(findTodo, memberId);
+        // if(card.getMember().getMemberId() == memberId)
+        //cardService.findCardsByMemberId(memberId);
         todoRepository.delete(findTodo);
+
     }
 
     // 존재하는 todo 목록인지 검증
@@ -72,5 +76,12 @@ public class TodoService {
         return todoRepository
                 .findById(todoId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TODO_NOT_FOUND));
+    }
+
+    public long validateTodoOwnership(Todo todo, long memberId){
+        Card card = todo.getCard();
+        if(card.getMember().getMemberId() != memberId){
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
     }
 }

@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @SpringBootTest
@@ -106,7 +107,7 @@ public class TodoControllerRest {
                 mockMvc.perform(
                         MockMvcRequestBuilders.patch(uri)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .header("AUthorization", "Bearer test-token")
+                                .header("Authorization", "Bearer test-token")
                                 .content(content)
                 );
         actions.andExpect(status().isOk())
@@ -114,10 +115,21 @@ public class TodoControllerRest {
     }
 
     @Test
-    public void deleteTodoTest() {
+    public void deleteTodoTest() throws Exception {
         long todoId = 1L;
+        String token = "Bearer test-token";
 
-        //given(todoService.deleteTodo(Mockito.anyLong(), Mockito.anyLong()));
+        given(jwtTokenizer.getMemberId(eq(token))).willReturn(1L);
+        doNothing().when(todoService)
+                        .deleteTodo(eq(todoId), eq(1L));
+
+        URI uri = UriComponentsBuilder.newInstance().path("/todo/{todoId}").buildAndExpand(todoId).toUri();
+
+        ResultActions actions = mockMvc.perform(
+                MockMvcRequestBuilders.delete(uri)
+                        .header("Authorization", "Bearer test-token")
+        );
+        actions.andExpect(status().isNoContent());
 
     }
 }

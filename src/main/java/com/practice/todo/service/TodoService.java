@@ -78,7 +78,7 @@ public class TodoService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TODO_NOT_FOUND));
     }
 
-    public long validateTodoOwnership(Todo todo, long memberId){
+    public void validateTodoOwnership(Todo todo, long memberId){
         Card card = todo.getCard();
         if(card.getMember().getMemberId() != memberId){
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);

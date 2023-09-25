@@ -2,6 +2,7 @@ package com.practice.member.dto;
 
 import com.practice.member.entity.Member;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
@@ -25,8 +26,9 @@ public class MemberDto {
         private String phone;
     }
 
-    @AllArgsConstructor
+    //@AllArgsConstructor
     @Getter
+    @Builder
     public static class Response {
         private long memberId;
         private String email;

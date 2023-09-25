@@ -45,8 +45,6 @@ public class TodoControllerTest {
     private Gson gson;
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     public void postTodoTest() throws Exception {

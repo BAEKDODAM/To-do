@@ -27,16 +27,18 @@ public class TodoService {
         this.cardService = cardService;
     }
 
-    public Todo createTodo(Todo todo, long cardId) {
+    public Todo createTodo(Todo todo, long cardId, long memberId) {
         Card card = cardService.findVerifiedCard(cardId);
         todo.setCard(card);
         todo.setCompleted(false);
+        validateTodoOwnership(todo, memberId);
         return todoRepository.save(todo);
     }
-    public Todo updateTodo(Todo todo) {
+    public Todo updateTodo(Todo todo, long memberId) {
         // 존재하는 todo인지 검증
         Todo findTodo = findVerifiedTodo(todo.getTodoId());
-
+        // todo 작성자와 memberId가 일지하는지 검증
+        validateTodoOwnership(findTodo, memberId);
         // title 정보와 completed 정보 업데이트
         Optional.ofNullable(todo.getTitle())
                 .ifPresent(title -> findTodo.setTitle(title));

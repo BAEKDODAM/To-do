@@ -41,7 +41,7 @@ public class TodoController {
                                    @PathVariable("cardId") @Positive long cardId,
                                    @Valid @RequestBody TodoPostDto requestBody) {
         long memberId = jwtTokenizer.getMemberId(token);
-        Todo createdTodo = todoService.createTodo(mapper.todoPostDtoToTodo(requestBody), cardId);
+        Todo createdTodo = todoService.createTodo(mapper.todoPostDtoToTodo(requestBody), cardId, memberId);
         URI location = UriCreator.createUri(TODO_DEFAULT_URL, createdTodo.getTodoId());
         return ResponseEntity.created(location).build();
         //return ResponseEntity.created(new SingleResponseDto<>(response));
@@ -53,7 +53,7 @@ public class TodoController {
                                     @Valid @RequestBody TodoPatchDto requestBody) {
         long memberId = jwtTokenizer.getMemberId(token);
         requestBody.setTodoId(todoId);
-        Todo updateTodo = todoService.updateTodo(mapper.todoPatchDtoToTodo(requestBody));
+        Todo updateTodo = todoService.updateTodo(mapper.todoPatchDtoToTodo(requestBody), memberId);
         return ResponseEntity.ok(mapper.todoToTodoResponseDto(updateTodo));
     }
     /*

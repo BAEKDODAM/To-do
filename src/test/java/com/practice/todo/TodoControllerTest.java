@@ -11,7 +11,6 @@ import com.practice.todo.mapper.TodoMapper;
 import com.practice.todo.service.TodoService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,11 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.UriComponentsBuilder;
-/*
-import static org.mockito.Mockito.*;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
- */
 import java.net.URI;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,9 +31,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TodoControllerRest {
+public class TodoControllerTest {
     @MockBean
     private TodoService todoService;
     @MockBean
@@ -63,7 +58,7 @@ public class TodoControllerRest {
         mockTodo.setTitle("test todo");
 
         given(jwtTokenizer.getMemberId(eq(token))).willReturn(1L);
-        given(todoService.createTodo(Mockito.any(Todo.class), Mockito.anyLong())).willReturn(mockTodo);
+        given(todoService.createTodo(Mockito.any(Todo.class), Mockito.anyLong(), Mockito.anyLong())).willReturn(mockTodo);
         given(todoMapper.todoPostDtoToTodo(Mockito.any(TodoPostDto.class))).willReturn(new Todo());
 
         String content = gson.toJson(post);
@@ -95,7 +90,7 @@ public class TodoControllerRest {
         patch.setTitle("patch");
         TodoResponseDto mockTodo = TodoResponseDto.builder().todoId(1L).build();
 
-        given(todoService.updateTodo(Mockito.any(Todo.class))).willReturn(new Todo());
+        given(todoService.updateTodo(Mockito.any(Todo.class), Mockito.anyLong())).willReturn(new Todo());
         given(todoMapper.todoPatchDtoToTodo(Mockito.any(TodoPatchDto.class))).willReturn(new Todo());
         given(todoMapper.todoToTodoResponseDto(Mockito.any(Todo.class))).willReturn(mockTodo);
 

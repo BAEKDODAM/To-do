@@ -52,7 +52,7 @@ public class MemberService {
         if (member.isPresent())
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
     }
-
+/*
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_EXISTS));
@@ -62,4 +62,6 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .orElseThrow(()-> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
+
+ */
 }

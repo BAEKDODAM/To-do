@@ -10,6 +10,26 @@ spring:
   sql:
     init:
       schema-locations: classpath*:db/h2/schema.sql
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 296374626577-1r1up8n8p0pm92t2ocpemtvn4kk8p1lr.apps.googleusercontent.com #${G_CLIENT_ID}
+            clientSecret: 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 #${G_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: DEBUG
+server:
+  servlet:
+    encoding:
+      force-response: true
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30

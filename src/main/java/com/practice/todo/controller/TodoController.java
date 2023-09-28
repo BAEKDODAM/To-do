@@ -1,17 +1,12 @@
 package com.practice.todo.controller;
 
 import com.practice.auth.jwt.JwtTokenizer;
-import com.practice.member.entity.Member;
-import com.practice.response.MultiResponseDto;
-import com.practice.response.SingleResponseDto;
 import com.practice.todo.dto.TodoPatchDto;
 import com.practice.todo.dto.TodoPostDto;
-import com.practice.todo.dto.TodoResponseDto;
 import com.practice.todo.entity.Todo;
 import com.practice.todo.mapper.TodoMapper;
 import com.practice.todo.service.TodoService;
 import com.practice.utils.UriCreator;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/todo")
@@ -56,24 +50,6 @@ public class TodoController {
         Todo updateTodo = todoService.updateTodo(mapper.todoPatchDtoToTodo(requestBody), memberId);
         return ResponseEntity.ok(mapper.todoToTodoResponseDto(updateTodo));
     }
-    /*
-    @GetMapping("/{todo-id}")
-    public ResponseEntity getTodo(@RequestHeader("Authorization") String token,
-                                  @PathVariable("todo-id") @Positive long todoId) {
-        Todo foundTodo = todoService.findTodo(todoId);
-        TodoResponseDto response = mapper.todoToTodoResponseDto(foundTodo);
-        return ResponseEntity.ok(new SingleResponseDto<>(response));
-    }
-
-    @GetMapping
-    public ResponseEntity getTodos(@Positive @RequestParam int page,
-                                   @Positive @RequestParam int size) {
-        Page<Todo> pageTodo = todoService.findAll(page, size);
-        List<Todo> todos = pageTodo.getContent();
-        return ResponseEntity.ok(new MultiResponseDto(mapper.todosToTodoResponseDtos(todos), pageTodo));
-    }
-
- */
 
     @DeleteMapping("/{todo-id}")
     public ResponseEntity deleteTodo(@RequestHeader("Authorization") String token,

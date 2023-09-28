@@ -6,13 +6,9 @@ import com.practice.exception.BusinessLogicException;
 import com.practice.exception.ExceptionCode;
 import com.practice.todo.entity.Todo;
 import com.practice.todo.repository.TodoRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -49,25 +45,10 @@ public class TodoService {
         // todo 정보 업데이트
         return todoRepository.save(findTodo);
     }
-/*
-    @Transactional(readOnly = true)
-    public Todo findTodo(long todoId) {
-        return findVerifiedTodo(todoId);
-    }
-
-    public List<Todo> findTodos() {
-        return (List<Todo>) todoRepository.findAll();
-    }
-    public Page<Todo> findAll(int page, int size){
-        return todoRepository.findAll(PageRequest.of(page - 1, size, Sort.by("todoPriority").descending()));
-    }
- */
 
     public void deleteTodo(long todoId, long memberId) {
         Todo findTodo = findVerifiedTodo(todoId);
         validateTodoOwnership(findTodo, memberId);
-        // if(card.getMember().getMemberId() == memberId)
-        //cardService.findCardsByMemberId(memberId);
         todoRepository.delete(findTodo);
 
     }

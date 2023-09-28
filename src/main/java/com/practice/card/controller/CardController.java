@@ -65,17 +65,6 @@ public class CardController {
                     return cardWithTodos;
                 }).collect(Collectors.toList());
         List<CardDto.Response> cardResponses = mapper.cardsToCardResponseDtos(cardsWithTodos);
-        /*
-        List<CardDto.Response> cardResponses = cards.stream()
-                .map(card -> {
-                    Card cardWithTodos = cardService.findCardWithTodos(card.getCardId());
-                    CardDto.Response response = mapper.cardToCardResponseDto(cardWithTodos);
-                    return response;
-                })
-                .collect(Collectors.toList());
-
-         */
-        //return ResponseEntity.ok(cardResponses);
         return  new ResponseEntity<>(
                 new SingleResponseDto<>(cardResponses), HttpStatus.OK
         );

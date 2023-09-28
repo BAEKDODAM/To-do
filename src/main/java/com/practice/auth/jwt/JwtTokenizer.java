@@ -97,23 +97,6 @@ public class JwtTokenizer {
 
         return key;
     }
-/*
-    public boolean validateToken(String token) {
-        if (!StringUtils.hasText(token)) return false;
-        String jwt = token.replace("Bearer ", "");
-        Claims claims = parseClaims(jwt);
-
-        return !claims.getExpiration().before(new Date());
-    }
-
-    private Claims parseClaims(String token) {
-        try {
-            return Jwts.parser().setSigningKey(getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey))).parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
- */
 
     public long getMemberId(String token) {
         String jws = token.replace("Bearer ", "");

@@ -72,8 +72,6 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE, "/*/members/**").hasRole("USER")
                         .anyRequest().permitAll()
                 )
-                //.oauth2Login()
-                //.successHandler(OAuth2MemberSuccessHandler );
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberRepository))
                 );

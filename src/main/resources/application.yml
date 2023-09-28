@@ -1,12 +1,12 @@
 spring:
   h2:
     console:
-      enabled: true   # Context path ??
+      enabled: true
       path: /h2
   jpa:
     spring.jpa.defer-datasource-initialization: true
   datasource:
-    url: jdbc:h2:mem:test   # JDBC URL ??
+    url: jdbc:h2:mem:test
   sql:
     init:
       schema-locations: classpath*:db/h2/schema.sql
@@ -15,8 +15,8 @@ spring:
       client:
         registration:
           google:
-            clientId: 296374626577-1r1up8n8p0pm92t2ocpemtvn4kk8p1lr.apps.googleusercontent.com #${G_CLIENT_ID}
-            clientSecret: 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 #${G_CLIENT_SECRET}
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
             scope:
               - email
               - profile

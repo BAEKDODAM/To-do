@@ -28,14 +28,11 @@ public class MemberService {
 
         verifyExistsEmail(member.getEmail());
 
-        // 추가: DB에 User Role 저장
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
 
         Member savedMember = memberRepository.save(member);
 
-        // 인증 이메일 전송
-        //publisher.publishEvent(new MemberRegistrationApplicationEvent(savedMember));
         return savedMember;
     }
     public Member findMember(long memberId) {
@@ -58,10 +55,5 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_EXISTS));
 
     }
-    public Member findMemberById(long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(()-> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-    }
-
  */
 }

@@ -58,7 +58,6 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CARD_NOT_FOUND));
         return card;
-        //return cardRepository.findCardWithTodos(cardId);
     }
 
     public void deleteCard(long memberId, long cardId){

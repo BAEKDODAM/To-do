@@ -23,13 +23,13 @@ public class Member {
     @Column(nullable = false, updatable = false, unique = true)
     private String email;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String password;
 
-    @Column(length = 13, nullable = false, unique = true)
+    @Column(length = 13,  unique = true)
     private String phone;
 
     @ElementCollection(fetch = FetchType.EAGER)
